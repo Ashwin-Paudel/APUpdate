@@ -15,27 +15,31 @@ class UNUpdaterViewController: NSViewController {
         super.viewDidLoad()
         // Do view setup here.
         do {
-            let contents = try String(contentsOf: URL(string: "https://raw.githubusercontent.com/Ashwin-Paudel/download/main/newupdateinfo.txt")!)
+            /// Create a .txt file in github, and then get the download url and replace it with this
+            let contents = try? String(contentsOf: URL(string: "https://raw.githubusercontent.com/Ashwin-Paudel/download/main/newupdateinfo.txt")!)
+            // If we can't recive the text, we will write and error
             featureListTextView.string = contents ?? "Error Loading Features"
         } catch {
         }
 //        featureListTextView.string = "hihihi"
     }
     @IBAction func updateButtonPress(_ sender: Any) {
-        let applicationFolder = FileManager.default.urls(for: .applicationDirectory, in: .userDomainMask).first
         // MARK: - Stage 1: Delete the app
         do {
+            // Replace Unique.app with your_app_name.app
             try FileManager.default.removeItem(atPath: "/Applications/Unique.app")
         } catch {
             print("Error")
         }
         // MARK: - Stage 2: Download the new app
+        /// Compress your app in a zip, upload to github and get download link
+        /// Replace it with the zip download link
         let url = URL(string: "https://github.com/Ashwin-Paudel/download/raw/main/Unique.zip")
         FileDownloader.loadFileAsync(url: url!) { [self] (path, error) in
-            let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Unique.zip")
+            
 // MARK: - Unzip the app and save to application folder
             print("PDF File downloaded to : \(path!)")
-            unzipFile(at: "/Users/ashwin/Documents/Unique.zip", to: "/Applications")
+            unzipFile(at: path!, to: "/Applications")
         }
     }
     func unzipFile(at sourcePath: String, to destinationPath: String) -> Bool {
@@ -44,5 +48,6 @@ class UNUpdaterViewController: NSViewController {
         return process.terminationStatus <= 1
     }
 }
+
 ```
 
