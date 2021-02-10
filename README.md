@@ -2,6 +2,8 @@
 
 Uses this code to update your Cocoa application
 
+and your storyboard should look like the screenshot image in the files
+
 ```Swift
 import Cocoa
 
